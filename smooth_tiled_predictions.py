@@ -1,5 +1,5 @@
 """
-@author: Hubert K'
+@author: Steven Ndungu & Hubert K
 
 Original code is from the following source. It comes with MIT License so please mention
 the original reference when sharing.
