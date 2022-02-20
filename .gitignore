@@ -7,7 +7,6 @@ temp/
 test/
 train/
 val/
-samples/
 samples/*
 
 image/
