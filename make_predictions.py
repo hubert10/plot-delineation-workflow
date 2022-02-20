@@ -140,7 +140,7 @@ model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_nam
 
 # Apply a trained model on large image
 
-img = cv2.imread(PROJECT_ROOT + "Samples/split_images/tile22.tif")  # BGR
+img = cv2.imread(PROJECT_ROOT + "samples/split_images/tile22.tif")  # BGR
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 patch_size = 1024
