@@ -1,3 +1,4 @@
+import os, sys
 from Mask_RCNN.mrcnn.config import Config
 
 ##########################################################################################################################
@@ -5,6 +6,13 @@ from Mask_RCNN.mrcnn.config import Config
 ##########################################################################################################################
 
 # Set configurations depending on the machine capacity you are using.
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+
+# Root directory of the project
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = BASE_DIR + "/"
+print(PROJECT_ROOT)
 
 
 class CustomConfig(Config):

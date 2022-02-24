@@ -239,7 +239,7 @@ def _recreate_from_subdivs(subdivs, window_size, subdivisions, padded_out_shape)
             )
             b += 1
         a += 1
-    return y / (subdivisions**2)
+    return y / (subdivisions ** 2)
 
 
 @tf_export("autograph.experimental.do_not_convert")
@@ -299,4 +299,5 @@ def predict_img_with_smooth_windowing(
         plt.imshow(prd)
         plt.title("Smoothly Merged Patches that were Tiled Tighter")
         plt.show()
+    print("Blending Completed")
     return prd

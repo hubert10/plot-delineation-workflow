@@ -50,15 +50,11 @@ from patchify import patchify, unpatchify
 import warnings
 
 warnings.filterwarnings("ignore")
-from utils.config import CustomConfig
+from utils.config import CustomConfig, PROJECT_ROOT
 from IPython import get_ipython
 
 # get_ipython().system('nvidia-smi')
 
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-PROJECT_ROOT = BASE_DIR + "/"
-print(PROJECT_ROOT)
 
 ##########################################################################################################################
 ##########################################################################################################################
@@ -69,13 +65,12 @@ print(PROJECT_ROOT)
 """
 Steps:
     
-1. Prepare the training/Validation data set
- For this case, Get satelite imagery of your area of interest. Slice the images into 1024*1024 patches then split them
- into the training and validation folders. 
-2. Annotate your images generated using the https://www.makesense.ai/ platform. Save the images in coco format. 
-3. Save the .json file in the respective folders after creating it. 
-4. Install and download the M-RCNN module from github.
-5. Use the script below accrodingly
+1. Load the ROI raster image
+ For this case, Get satelite imagery of your area of interest.
+2. Convert the raster into  np.array after resizing it to be divisible by our patch_size:1024 for Mask-RCNN 
+3. CAll the model to detect plot boundaries and return masksas one masked image 
+4. Perform local predictions on each patch using Smoothing Blending Algo, with rotations and miroring each patch
+5. Merge all patches together
 """
 ##########################################################################################################################
 #                                      Model setup                                                                     #
@@ -137,10 +132,10 @@ class_number = 1
 config = CustomConfig(class_number)
 model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_name=True)
-
+print(PROJECT_ROOT)
 # Apply a trained model on large image
-
-img = cv2.imread(PROJECT_ROOT + "samples/split_images/tile22.tif")  # BGR
+img = cv2.imread(PROJECT_ROOT + "samples/debi_tiguet_image.tif")  # BGR
+# img = cv2.imread(PROJECT_ROOT + "samples/split_images/tile22.tif")  # BGR
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
 patch_size = 1024
@@ -162,6 +157,10 @@ from smooth_tiled_predictions import predict_img_with_smooth_windowing
 
 
 def predict_image(tile_image):
+    """
+    Detects plot boundaries and returns
+    corresponding masks as one masked image
+    """
     results = model.detect([tile_image])
     mask_generated = results[0]["masks"]
     masked_img = np.any(mask_generated.astype(np.bool), axis=-1)
@@ -192,7 +191,6 @@ predictions_smooth = predict_img_with_smooth_windowing(
     nb_classes=3,
     pred_func=(func_pred),
 )
-
 end_time = datetime.now()
 
 print("Duration: {}".format(end_time - start_time))
@@ -213,14 +211,12 @@ now = datetime.now()  # current date and time
 time = now.strftime("%m%d%Y_%H%M")
 predictions_smooth1 = predictions_smooth1.astype(np.uint8)
 
-io.imsave(
-    os.path.join(
-        PROJECT_ROOT + "Output",
-        "Pred_tile{}{}".format(str(time), ".jpg"),
-        predictions_smooth,
-    )
-)
 
+io.imsave(
+    os.path.join(PROJECT_ROOT + "Output", "Pred_tile{}{}".format(str(time), ".jpg")),
+    predictions_smooth,
+)
+# See the comments below for the next step of this prediction
 #######################################################################################################################
 #                                  Georeferencing of the images generated.                                                                      #
 #######################################################################################################################

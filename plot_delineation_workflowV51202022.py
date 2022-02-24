@@ -9,12 +9,6 @@ Created on FEB 02/02 at Manobi Africa/ ICRISAT
           Hubert Kanyamahanga - ICRISAT/ Manobi Africa
           Glorie Wowo -  ICRISAT/ Manobi Africa
 """
-
-
-"""
-Import Necesaary libraries
-
-"""
 import cv2
 import json
 import os
@@ -23,7 +17,6 @@ import numpy as np
 from datetime import datetime
 from skimage import io, color
 import matplotlib.pyplot as plt
-
 from numpy import asarray
 from numpy import savetxt
 
@@ -662,3 +655,17 @@ io.imsave(
 #######################################################################################################################
 #                                  Georeferencing of the images generated.                                                                      #
 #######################################################################################################################
+start = datetime.strptime(date_1, date_format_str)
+end = datetime.strptime(date_2, date_format_str)
+# get the difference between two dates as timedelta object
+diff = end.date() - start.date()
+print("Difference between dates in days:")
+print(diff.days)
+
+date_format_str = "%m-%d-%Y, %H:%M:%S"
+start = datetime.strptime(now, date_format_str)
+end = datetime.strptime(now, date_format_str)
+# get the difference between two dates as timedelta object
+diff = end.date() - start.date()
+print("Difference between dates in days:")
+print(diff)

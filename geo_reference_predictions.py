@@ -4,12 +4,12 @@
 """
 # ## Georeference Masks
 # Example found in the workstation workflow
-
-# The aim of this script is to convert prediction patches saved in jp,png, etc to TIF format referencing the metadata of the original satelite imagery
+# The aim of this script is to convert prediction patches saved in jp, png, etc to TIF format referencing the metadata of the original satelite imagery
 
 
 import rasterio as rio
 import pathlib
+from utils.config import CustomConfig, PROJECT_ROOT
 
 
 #### Convert the PNG predictions to Rasters Tif format
@@ -24,16 +24,17 @@ def convert_png_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
     # img = img.astype('uint16')
     # img = np.stack((img,)*1, axis=1) #reshape to append the n channels of rgb for compatibility
     # Input image for coordinate reference
-
     with rio.open(
         str(georef_img_tif)
-        + "\\"
-        + str(input_img_png).replace("jpg", "tif").split("\\")[-1]
+        + "/"
+        + str(input_img_png).replace("jpg", "tif").split("/")[-1]
     ) as naip:
         # open georeferenced.tif for writing
 
         with rio.open(
-            str(save_path) + "/" + "tile_{}.tif".format(idx),
+            str(save_path)
+            + "/"
+            + "{}.tif".format(str(input_img_png).split("/")[-1].split(".")[0]),
             "w",
             driver="GTiff",
             count=1,
@@ -47,24 +48,22 @@ def convert_png_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
 
 
 # Set the paths
-# png images predicted path
-input_img_png = "E:\\PlotDel_Steven\\Data\\Test\\pred_image\\"
+# path of png or jpg image predicted from  smoothing algorithm
+input_img_png = PROJECT_ROOT + "results/Test/pred_image/"
 input_img_png = pathlib.Path(input_img_png)
 
-# folder with tiles that were predicted (from original tif)
-georef_img_tif = "E:\\PlotDel_Steven\\Data\\Test\\Ref_image\\"
+# folder with original raster image (from original tif)
+georef_img_tif = PROJECT_ROOT + "results/Test/ref_image/"
 georef_img_tif = pathlib.Path(georef_img_tif)
 
 # Path to save the outputs
-save_path = "E:\\PlotDel_Steven\\Data\\Test\\geo_referenced\\"
+save_path = PROJECT_ROOT + "results/Test/geo_referenced/"
 save_path = pathlib.Path(save_path)
 input_img_png, georef_img_tif, save_path
 
-
-# Import the images, convert the to tif and save back in defined folder
+# Import the images, convert them to tif and save back in defined folder
 
 images = list(input_img_png.glob("*"))
-
 
 for idx, val in enumerate(images):
     convert_png_to_tif_and_save(str(val), save_path, georef_img_tif, idx)
