@@ -9,12 +9,6 @@ Created on FEB 02/02 at Manobi Africa/ ICRISAT
           Hubert Kanyamahanga - ICRISAT/ Manobi Africa
           Glorie Wowo -  ICRISAT/ Manobi Africa
 """
-
-
-"""
-Import Necesaary libraries
-
-"""
 import cv2
 import json
 import os
@@ -23,9 +17,6 @@ import numpy as np
 from datetime import datetime
 from skimage import io, color
 import matplotlib.pyplot as plt
-
-from numpy import asarray
-from numpy import savetxt
 from osgeo import gdal
 import skimage
 import geopandas as gpd
