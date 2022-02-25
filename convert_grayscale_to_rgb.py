@@ -14,12 +14,12 @@ end_time = datetime.now()
 now = datetime.now()  # current date and time
 time = now.strftime("%m%d%Y_%H%M")
 img = cv2.imread(path_to_image)  # BGR
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+img = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
 
 io.imsave(
     os.path.join(
         PROJECT_ROOT + "results/Test/geo_referenced",
-        "RGB_{}{}{}".format(str(path_to_image).split("/")[-1].split("/")[0], str(time), ".tif"),
+        "RGB_from_{}{}{}".format(str(path_to_image).split("/")[-1].split("/")[0], str(time), ".tif"),
     ),
     img,
 )
