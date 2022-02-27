@@ -38,7 +38,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
             median_filtered = ndimage.median_filter(grayscale, size=3)
             threshold = skimage.filters.threshold_li(median_filtered)
             predicted = np.uint8(median_filtered > threshold) * 255
-            io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[0]), 'jpg'), predicted)
+            io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[-1]), 'jpg'), predicted)
 
     elif len(nlyTIFF) == 1:
         from PIL import Image
@@ -47,12 +47,12 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
         median_filtered = ndimage.median_filter(grayscale, size=3)
         threshold = skimage.filters.threshold_li(grayscale)
         predicted = np.uint8(median_filtered > threshold) * 255
-        io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[0]), 'jpg'), predicted)
+        io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[-1]), 'jpg'), predicted)
     else:
         print("No jpg file given in the path provided")
 
 new_tif = roi_image.split(".")[0]
-input_path = PROJECT_ROOT + "results/Test/pred_image/" + new_tif +'/'
+input_path = PROJECT_ROOT + "results/Test/pred_image/" + new_tif
 
 # Path to save the outputs
 save_path = PROJECT_ROOT + "results/Test/filtered/"
