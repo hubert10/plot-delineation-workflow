@@ -9,17 +9,39 @@ Created on FEB 02/02 at Manobi Africa/ ICRISAT
           Hubert Kanyamahanga - ICRISAT/ Manobi Africa
           Glorie Wowo -  ICRISAT/ Manobi Africa
 """
+
+
+"""
+Import Necesaary libraries
+
+"""
 import cv2
+import json
 import os
 import PIL
 import numpy as np
 from datetime import datetime
 from skimage import io, color
 import matplotlib.pyplot as plt
+from numpy import asarray
+from numpy import savetxt
+from osgeo import gdal
+import skimage
+import geopandas as gpd
+import rasterio
+from rasterio import features
+import rasterio as rio
+from rasterio.merge import merge
+from rasterio import windows
+from shapely.geometry import shape
+from shapely.geometry import Polygon
+import matplotlib.pyplot as plt
 import skimage.io as io
+import matplotlib.image as mpimg
 from tkinter import Tcl
 import tensorflow as tf
-
+from PIL import Image
+import numpy
 # Set this to True to see more logs details
 os.environ["AUTOGRAPH_VERBOSITY"] = "5"
 tf.autograph.set_verbosity(3, False)
@@ -28,12 +50,15 @@ from patchify import patchify, unpatchify
 import warnings
 
 warnings.filterwarnings("ignore")
-from utils.config import CustomConfig, PROJECT_ROOT
-from utils.make_dir import create_dir
-from utils.config import roi_image
+from utils.config import CustomConfig
 from IPython import get_ipython
 
 # get_ipython().system('nvidia-smi')
+
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+PROJECT_ROOT = BASE_DIR + "/"
+print(PROJECT_ROOT)
 
 ##########################################################################################################################
 ##########################################################################################################################
@@ -44,23 +69,24 @@ from IPython import get_ipython
 """
 Steps:
     
-1. Load the ROI raster image
- For this case, Get satelite imagery of your area of interest.
-2. Convert the raster into  np.array after resizing it to be divisible by our patch_size:1024 for Mask-RCNN 
-3. CAll the model to detect plot boundaries and return masksas one masked image 
-4. Perform local predictions on each patch using Smoothing Blending Algo, with rotations and miroring each patch
-5. Merge all patches together
+1. Prepare the training/Validation data set
+ For this case, Get satelite imagery of your area of interest. Slice the images into 1024*1024 patches then split them
+ into the training and validation folders. 
+2. Annotate your images generated using the https://www.makesense.ai/ platform. Save the images in coco format. 
+3. Save the .json file in the respective folders after creating it. 
+4. Install and download the M-RCNN module from github.
+5. Use the script below accrodingly
 """
 ##########################################################################################################################
 #                                      Model setup                                                                     #
 ##########################################################################################################################
 """
-# Use MRCNN for version 2.X tensorflow
-# !git clone https://github.com/BupyeongHealer/Mask_RCNN_tf_2.x.git for tf 2.x  #Steven
-# installtensorflow 2.3.0 and keras 2.4
-# !pip install tensorflow==2.3.0
-# !pip install keras==2.4
-# !pip install --upgrade h5py==2.10.0
+#Use MRCNN for version 2.X tensorflow
+#!git clone https://github.com/BupyeongHealer/Mask_RCNN_tf_2.x.git for tf 2.x  #Steven
+#installtensorflow 2.3.0 and keras 2.4
+#!pip install tensorflow==2.3.0
+#!pip install keras==2.4
+#!pip install --upgrade h5py==2.10.0
 """
 
 # Get the project root directory
@@ -72,8 +98,9 @@ print("Printing the current project root dir".format(os.getcwd()))
 # Import Mask RCNN
 from Mask_RCNN.mrcnn import utils
 import Mask_RCNN.mrcnn.model as modellib
+from Mask_RCNN.mrcnn import visualize
 from Mask_RCNN.mrcnn.model import log
-from PIL import Image
+from PIL import Image, ImageDraw
 
 with open("mrcnn/model.py") as f:
     model_file = f.read()
@@ -112,11 +139,9 @@ model = modellib.MaskRCNN(mode="inference", model_dir=MODEL_DIR, config=config)
 model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_name=True)
 
 # Apply a trained model on large image
-# Load Large Image
-img = cv2.imread(PROJECT_ROOT + "samples/roi/" + roi_image)  # BGR
-# img = cv2.imread(PROJECT_ROOT + "samples/roi/debi_tiguet_image.tif")  # BGR
+print(PROJECT_ROOT)
+img = cv2.imread(PROJECT_ROOT + "samples/debi_tiguet_image.tif")  # BGR
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-
 patch_size = 1024
 
 SIZE_X = (
@@ -136,10 +161,6 @@ from smooth_tiled_predictions import predict_img_with_smooth_windowing
 
 
 def predict_image(tile_image):
-    """
-    Detects plot boundaries and returns
-    corresponding masks as one masked image
-    """
     results = model.detect([tile_image])
     mask_generated = results[0]["masks"]
     masked_img = np.any(mask_generated.astype(np.bool), axis=-1)
@@ -154,10 +175,10 @@ def func_pred(img_batch_subdiv):
     subdivs = np.array(list(res))
     return subdivs
 
+
 now = datetime.now()
 start_time = now
 starting_time = now.strftime("%m-%d-%Y, %H:%M:%S")
-
 print(
     "+++++++++++++++++++++++++++  Starting Prediction at: {} +++++++++++++++++++++++++++ ".format(
         starting_time
@@ -171,6 +192,7 @@ predictions_smooth = predict_img_with_smooth_windowing(
     nb_classes=3,
     pred_func=(func_pred),
 )
+
 end_time = datetime.now()
 
 print("Duration: {}".format(end_time - start_time))
@@ -191,17 +213,18 @@ now = datetime.now()  # current date and time
 time = now.strftime("%m%d%Y_%H%M")
 predictions_smooth1 = predictions_smooth1.astype(np.uint8)
 
-# Create dir for saving predictions
-dir_output = PROJECT_ROOT + "Output"
-output_dir = create_dir(dir_output + roi_image.split(".")[0])
-
 io.imsave(
     os.path.join(
-        output_dir, "pred_{}{}{}".format(roi_image.split(".")[0], str(time), ".jpg")
-    ),
-    predictions_smooth,
+        PROJECT_ROOT + "Output",
+        "pred_debi_tiguet_tile{}{}".format(str(time), ".jpg")),
+        predictions_smooth
+    
 )
-# See the comments below for the next step of this prediction
-#######################################################################################################################
-#                                  Georeferencing of the images generated.                                                                      #
-#######################################################################################################################
+
+# im = Image.fromarray(predictions_smooth)
+# im.save(
+#     os.path.join(
+#         PROJECT_ROOT + "Output",
+#         "predicted_tile{}{}".format(str(time), ".jpg")
+#     )
+# )
