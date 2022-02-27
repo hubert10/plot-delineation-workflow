@@ -19,20 +19,19 @@ import matplotlib.pyplot as plt
 import skimage.io as io
 from tkinter import Tcl
 import tensorflow as tf
-
-# Set this to True to see more logs details
-os.environ["AUTOGRAPH_VERBOSITY"] = "5"
-tf.autograph.set_verbosity(3, False)
-tf.cast
 from patchify import patchify, unpatchify
-import warnings
-
-warnings.filterwarnings("ignore")
 from utils.config import CustomConfig, PROJECT_ROOT
 from utils.make_dir import create_dir
 from utils.config import roi_image
 from IPython import get_ipython
 
+# Set this to True to see more logs details
+os.environ["AUTOGRAPH_VERBOSITY"] = "5"
+tf.autograph.set_verbosity(3, False)
+tf.cast
+import warnings
+
+warnings.filterwarnings("ignore")
 # get_ipython().system('nvidia-smi')
 
 ##########################################################################################################################
@@ -154,6 +153,7 @@ def func_pred(img_batch_subdiv):
     subdivs = np.array(list(res))
     return subdivs
 
+
 now = datetime.now()
 start_time = now
 starting_time = now.strftime("%m-%d-%Y, %H:%M:%S")
@@ -192,14 +192,14 @@ time = now.strftime("%m%d%Y_%H%M")
 predictions_smooth1 = predictions_smooth1.astype(np.uint8)
 
 # Create dir for saving predictions
-dir_output = PROJECT_ROOT + "results/Test/pred_image/"
+dir_output = PROJECT_ROOT + "results/Test/predicted"
 output_dir = create_dir(dir_output + roi_image.split(".")[0])
 
 io.imsave(
     os.path.join(
         output_dir, "{}{}{}".format(roi_image.split(".")[0], str(time), ".jpg")
     ),
-    predictions_smooth1,
+    predictions_smooth,
 )
 # See the comments below for the next step of this prediction
 #######################################################################################################################

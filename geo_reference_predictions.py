@@ -57,11 +57,11 @@ input_img_jpg = input_img_jpg + roi_image.split(".")[0]
 input_img_jpg = pathlib.Path(input_img_jpg)
 
 # folder with original raster image (from original tif)
-georef_img_tif = PROJECT_ROOT + "results/Test/ref_image/"
+georef_img_tif = PROJECT_ROOT + "results/Test/inputs/"
 georef_img_tif = pathlib.Path(georef_img_tif)
 
 # Path to save the outputs
-save_path = PROJECT_ROOT + "results/Test/geo_referenced/"
+save_path = PROJECT_ROOT + "results/Test/georeferenced/"
 # Create dir for saving predictions
 output_dir = create_dir(save_path + roi_image.split(".")[0])
 save_path = pathlib.Path(output_dir)

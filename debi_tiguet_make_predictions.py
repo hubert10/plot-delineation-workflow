@@ -42,6 +42,7 @@ from tkinter import Tcl
 import tensorflow as tf
 from PIL import Image
 import numpy
+
 # Set this to True to see more logs details
 os.environ["AUTOGRAPH_VERBOSITY"] = "5"
 tf.autograph.set_verbosity(3, False)
@@ -215,10 +216,9 @@ predictions_smooth1 = predictions_smooth1.astype(np.uint8)
 
 io.imsave(
     os.path.join(
-        PROJECT_ROOT + "Output",
-        "pred_debi_tiguet_tile{}{}".format(str(time), ".jpg")),
-        predictions_smooth1
-    
+        PROJECT_ROOT + "Output", "pred_debi_tiguet_tile{}{}".format(str(time), ".jpg")
+    ),
+    predictions_smooth1,
 )
 
 # im = Image.fromarray(predictions_smooth)
