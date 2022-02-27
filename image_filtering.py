@@ -5,6 +5,7 @@ whitten image and darken other parts
 import os
 import numpy as np
 import skimage
+import pathlib
 from os import listdir
 from os.path import isfile
 from tkinter import *
@@ -13,6 +14,8 @@ import skimage.io as io
 import pandas as pd
 from utils.config import PROJECT_ROOT
 from scipy import ndimage
+from utils.config import roi_image
+from utils.make_dir import create_dir
 
 # Get the project root directory
 project_path = PROJECT_ROOT
@@ -26,7 +29,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
     nlyTIFF = [
         os.path.join(input_img_path, f)
         for f in listdir(input_img_path)
-        if isfile(os.path.join(input_img_path, f)) and f.endswith(".jpg")
+        if isfile(os.path.join(input_img_path, f)) and f.endswith(".tif")
     ]
     nlyTIFF = Tcl().call("lsort", "-dict", nlyTIFF)
 
@@ -52,8 +55,14 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
     else:
         print("No jpg file given in the path provided")
 
+new_tif = roi_image.split(".")[0]
+input_path = PROJECT_ROOT + "results/Test/geo_referenced/" + new_tif
 
-input_path = PROJECT_ROOT + "results/Test/pred_image/"
-save_path = PROJECT_ROOT + "results/Test/final/"
+# Path to save the outputs
+save_path = PROJECT_ROOT + "results/Test/filtered/"
+# Create dir for saving predictions
+output_dir = create_dir(save_path + roi_image.split(".")[0])
+save_path = pathlib.Path(output_dir)
+
 # Function call
 whitten_image_darken_else_filtering(input_path, save_path)
