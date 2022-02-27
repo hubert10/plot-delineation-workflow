@@ -29,6 +29,6 @@ pwd; hostname; date
 module load tensorflow/2.4.1
 
 # This should be the command you would use if you were running your TensorFlow application from the terminal.
-python debi_tiguet_make_predictions.py
+python make_predictions.py
 
 date

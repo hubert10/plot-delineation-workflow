@@ -47,7 +47,6 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
 
     elif len(nlyTIFF) == 1:
         from PIL import Image
-
         Image.MAX_IMAGE_PIXELS = 1000000000
         grayscale = io.imread(nlyTIFF[0], plugin="matplotlib")
         median_filtered = ndimage.median_filter(grayscale, size=3)
