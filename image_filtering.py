@@ -38,7 +38,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
             median_filtered = ndimage.median_filter(grayscale, size=3)
             threshold = skimage.filters.threshold_li(median_filtered)
             predicted = np.uint8(median_filtered > threshold) * 255
-            io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[-1], 'jpg')), predicted)
+            io.imsave(os.path.join(save_path, "{}.{}".format(input_img_path.split('/')[-1], 'jpg')), predicted)
 
     elif len(nlyTIFF) == 1:
         from PIL import Image
@@ -47,7 +47,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
         median_filtered = ndimage.median_filter(grayscale, size=3)
         threshold = skimage.filters.threshold_li(grayscale)
         predicted = np.uint8(median_filtered > threshold) * 255
-        io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[-1], 'jpg')), predicted)
+        io.imsave(os.path.join(save_path, "{}.{}".format(input_img_path.split('/')[-1], 'jpg')), predicted)
     else:
         print("No jpg file given in the path provided")
 

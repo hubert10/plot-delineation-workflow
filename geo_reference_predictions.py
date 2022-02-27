@@ -52,9 +52,9 @@ def convert_png_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
 
 
 # path of png or jpg image predicted from smoothing algorithm
-input_img_png = PROJECT_ROOT + "results/Test/filtered/"
-input_img_png = input_img_png + roi_image.split(".")[0]
-input_img_png = pathlib.Path(input_img_png)
+input_img_jpg = PROJECT_ROOT + "results/Test/filtered/"
+input_img_jpg = input_img_jpg + roi_image.split(".")[0]
+input_img_jpg = pathlib.Path(input_img_jpg)
 
 # folder with original raster image (from original tif)
 georef_img_tif = PROJECT_ROOT + "results/Test/ref_image/"
@@ -65,11 +65,11 @@ save_path = PROJECT_ROOT + "results/Test/geo_referenced/"
 # Create dir for saving predictions
 output_dir = create_dir(save_path + roi_image.split(".")[0])
 save_path = pathlib.Path(output_dir)
-input_img_png, georef_img_tif, save_path
+input_img_jpg, georef_img_tif, save_path
 
 # Import the images, convert them to tif and save back in defined folder
 
-images = list(input_img_png.glob("*"))
+images = list(input_img_jpg.glob("*"))
 
 for idx, val in enumerate(images):
     convert_png_to_tif_and_save(str(val), save_path, georef_img_tif, idx)

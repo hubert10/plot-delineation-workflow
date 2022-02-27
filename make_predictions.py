@@ -192,14 +192,14 @@ time = now.strftime("%m%d%Y_%H%M")
 predictions_smooth1 = predictions_smooth1.astype(np.uint8)
 
 # Create dir for saving predictions
-dir_output = PROJECT_ROOT + "Output"
+dir_output = PROJECT_ROOT + "results/Test/pred_image/"
 output_dir = create_dir(dir_output + roi_image.split(".")[0])
 
 io.imsave(
     os.path.join(
-        output_dir, "pred_{}{}{}".format(roi_image.split(".")[0], str(time), ".jpg")
+        output_dir, "{}{}{}".format(roi_image.split(".")[0], str(time), ".jpg")
     ),
-    predictions_smooth,
+    predictions_smooth1,
 )
 # See the comments below for the next step of this prediction
 #######################################################################################################################
