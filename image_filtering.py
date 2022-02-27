@@ -11,7 +11,6 @@ from os.path import isfile
 from tkinter import *
 from tkinter import Tcl
 import skimage.io as io
-import pandas as pd
 from utils.config import PROJECT_ROOT
 from scipy import ndimage
 from utils.config import roi_image
@@ -29,7 +28,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
     nlyTIFF = [
         os.path.join(input_img_path, f)
         for f in listdir(input_img_path)
-        if isfile(os.path.join(input_img_path, f)) and f.endswith(".tif")
+        if isfile(os.path.join(input_img_path, f)) and f.endswith(".jpg")
     ]
     nlyTIFF = Tcl().call("lsort", "-dict", nlyTIFF)
 
@@ -39,19 +38,16 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
             median_filtered = ndimage.median_filter(grayscale, size=3)
             threshold = skimage.filters.threshold_li(median_filtered)
             predicted = np.uint8(median_filtered > threshold) * 255
-            io.imsave(
-                os.path.join(save_path, "predict_{}.tif".format(int(i))), predicted
-            )
+            io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[-1].split('.')[0]), 'jpg'), predicted)
 
     elif len(nlyTIFF) == 1:
         from PIL import Image
-
         Image.MAX_IMAGE_PIXELS = 1000000000
         grayscale = io.imread(nlyTIFF[0], plugin="matplotlib")
         median_filtered = ndimage.median_filter(grayscale, size=3)
         threshold = skimage.filters.threshold_li(grayscale)
         predicted = np.uint8(median_filtered > threshold) * 255
-        io.imsave(os.path.join(save_path, "predict.tif"), predicted)
+        io.imsave(os.path.join(save_path, "filter_{}.{}".format(input_img_path.split('/')[-1].split('.')[0]), 'jpg'), predicted)
     else:
         print("No jpg file given in the path provided")
 
