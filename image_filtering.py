@@ -52,7 +52,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
         print("No jpg file given in the path provided")
 
 new_tif = roi_image.split(".")[0]
-input_path = PROJECT_ROOT + "results/Test/geo_referenced/" + new_tif
+input_path = PROJECT_ROOT + "results/Test/pred_image/" + new_tif
 
 # Path to save the outputs
 save_path = PROJECT_ROOT + "results/Test/filtered/"
