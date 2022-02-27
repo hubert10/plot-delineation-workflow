@@ -20,14 +20,25 @@
 - Python 3.8
 
 
-
-
-
 This is an implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870) on Python 3, Keras, and TensorFlow. The model generates bounding boxes and segmentation masks for each instance of an object in the image. It's based on Feature Pyramid Network (FPN) and a ResNet101 backbone.
 
 Mask R-CNN principles
 
 To sum up, Mask R-CNN is an architecture made of three main parts. First, there is a convolutional network called backbone, which produces features from an input image. From these features, a second part (called RPN for Region Proposal Network) proposes and refines a certain number of regions of interest (as rectangular bounding boxes), which are likely to contain a single cropland. Finally, the last part extracts the best proposals, refines them once again, and produces a segmentation mask for each of them.
+
+Blending smoothing Algorithm:
+The following steps summarises the smoothing process to complete the tiles predictions and merging
+
+We did it in the following way:
+  1. Original image of size divisible by 1024 is duplicated 8 times, in order to have all the possible rotations and mirrors of that image that fits the possible 90 degrees rotations.
+  2. All produced rotations are padded.
+  3. Split into tiles(each padded rotated image is split into tiles and predictions are made on every single rotated image)
+  4. We perform predictions on each tile.
+  5. Combine predictions back into the original size.
+  6. Crop padding areas.
+  7. Prediction of the rotated image is rotated back to the original orientation.
+  8. Results of the both prediction pipelines averaged with geometric mean.
+
 
 
 ![Instance Segmentation Sample](assets/street.png)

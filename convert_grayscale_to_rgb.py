@@ -22,7 +22,9 @@ img = gray2rgb(img)
 io.imsave(
     os.path.join(
         PROJECT_ROOT + "results/Test/geo_referenced",
-        "RGB_from_{}{}{}".format(str(path_to_image).split("/")[-1].split("/")[0], str(time), ".tif"),
+        "RGB_from_{}{}{}".format(
+            str(path_to_image).split("/")[-1].split("/")[0], str(time), ".tif"
+        ),
     ),
     img,
 )

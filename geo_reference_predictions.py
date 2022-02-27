@@ -9,7 +9,9 @@
 
 import rasterio as rio
 import pathlib
-from utils.config import CustomConfig, PROJECT_ROOT
+from utils.make_dir import create_dir
+from utils.config import PROJECT_ROOT
+from utils.config import roi_image
 
 
 #### Convert the PNG predictions to Rasters Tif format
@@ -46,9 +48,10 @@ def convert_png_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
         ) as dst:
             dst.write(img, indexes=1)
 
+    ############## Set the paths #############
 
-# Set the paths
-# path of png or jpg image predicted from  smoothing algorithm
+
+# path of png or jpg image predicted from smoothing algorithm
 input_img_png = PROJECT_ROOT + "results/Test/pred_image/"
 input_img_png = pathlib.Path(input_img_png)
 
@@ -58,7 +61,9 @@ georef_img_tif = pathlib.Path(georef_img_tif)
 
 # Path to save the outputs
 save_path = PROJECT_ROOT + "results/Test/geo_referenced/"
-save_path = pathlib.Path(save_path)
+# Create dir for saving predictions
+output_dir = create_dir(save_path + roi_image.split(".")[0])
+save_path = pathlib.Path(output_dir)
 input_img_png, georef_img_tif, save_path
 
 # Import the images, convert them to tif and save back in defined folder

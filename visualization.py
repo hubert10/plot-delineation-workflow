@@ -24,15 +24,10 @@ from utils.config import PROJECT_ROOT
 # Load original Image
 src = rasterio.open(PROJECT_ROOT + "samples/debi_tiguet_image.tif")
 # Load the predicted Image
-# src1 = rasterio.open(
-#     PROJECT_ROOT + "results/Test/pred_image/debi_tiguet_image.jpg"
-# )
+
 src1 = rasterio.open(
-    PROJECT_ROOT + "results/Test/final/RGB_02252022_0439.tif"
+    PROJECT_ROOT + "results/Test/geo_referenced/gray_debi_tiguet_image.tif"
 )
-# src1 = rasterio.open(
-#     PROJECT_ROOT + "results/Test/geo_referenced/debi_tiguet_image.tif"
-# )
 fig, (axr, axg) = plt.subplots(1, 2, figsize=(21, 7))
 show(src, ax=axr, title="Original Image")
 show(src1, ax=axg, title="Predicted Raster")

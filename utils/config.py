@@ -62,3 +62,7 @@ class CustomConfig(Config):
     VALIDATION_STEPS = 15
 
     DETECTION_MIN_CONFIDENCE = 0.9
+
+
+# Define ROI Raster
+roi_image = "tile_4096_4096.tif"

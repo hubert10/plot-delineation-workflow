@@ -71,7 +71,7 @@ def _window_2D(window_size, power=2):
     Done with an augmentation, and self multiplication with its transpose.
     Could be generalized to more dimensions.
     """
-    # Memoization
+    # Memorization
     global cached_2d_windows
     key = "{}_{}".format(window_size, power)
     if key in cached_2d_windows:
@@ -169,6 +169,7 @@ def _rotate_mirror_undo(im_mirrs):
 
 def _windowed_subdivs(padded_img, window_size, subdivisions, nb_classes, pred_func):
     """
+    This is processed in each of 8 rotations of original image
     Create tiled overlapping patches.
     Returns:
         5D numpy array of shape = (
@@ -252,10 +253,11 @@ def predict_img_with_smooth_windowing(
     the predictions to merge them smoothly.
     See 6th, 7th and 8th idea here:
     http://blog.kaggle.com/2017/05/09/dstl-satellite-imagery-competition-3rd-place-winners-interview-vladimir-sergey/
+    https://medium.com/kaggle-blog/dstl-satellite-imagery-competition-3rd-place-winners-interview-vladimir-sergey-85395e51e118
     """
     pad = _pad_img(input_img, window_size, subdivisions)
     pads = _rotate_mirror_do(pad)
-
+    # Window_size can be 1024, image size Mask-RCNN
     # Note that the implementation could be more memory-efficient by merging
     # the behavior of `_windowed_subdivs` and `_recreate_from_subdivs` into
     # one loop doing in-place assignments to the new image matrix, rather than
@@ -275,8 +277,20 @@ def predict_img_with_smooth_windowing(
     # non-zero dommain. This may require to augment the `subdivisions` argument
     # to 4 rather than 2.
 
+    """
+    We did it in the following way:
+        1. Original (3600, 3600) image is rotated by 90 degrees and we get 2 images: original and rotated.
+        2. Both are padded.
+        3. Split into tiles(each padded rotation image is split into tiles and predictions are done on it)
+        4. We perform predictions on each tile.
+        5. Combine predictions back into the original size.
+        6. Crop padding areas.
+        7. Prediction of the rotated image is rotated back to the original orientation.
+        8. Results of the both prediction pipelines averaged with geometric mean.
+    """
+
     res = []
-    for pad in tqdm(pads):
+    for pad in tqdm(pads):  # 8 rotations of original image
         # For every rotation:
         sd = _windowed_subdivs(pad, window_size, subdivisions, nb_classes, pred_func)
         one_padded_result = _recreate_from_subdivs(
@@ -288,7 +302,9 @@ def predict_img_with_smooth_windowing(
 
         res.append(one_padded_result)
 
-    # Merge after rotations:
+    # Merge after rotations: Here the 8 predicted rotations
+    # are merged and the mean average of them is retained
+
     padded_results = _rotate_mirror_undo(res)
 
     prd = _unpad_img(padded_results, window_size, subdivisions)
