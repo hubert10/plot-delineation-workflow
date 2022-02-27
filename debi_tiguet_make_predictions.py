@@ -140,7 +140,7 @@ model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_nam
 
 # Apply a trained model on large image
 print(PROJECT_ROOT)
-img = cv2.imread(PROJECT_ROOT + "samples/debi_tiguet_image.tif")  # BGR
+img = cv2.imread(PROJECT_ROOT + "samples/roi/debi_tiguet_image.tif")  # BGR
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 patch_size = 1024
 
@@ -217,7 +217,7 @@ io.imsave(
     os.path.join(
         PROJECT_ROOT + "Output",
         "pred_debi_tiguet_tile{}{}".format(str(time), ".jpg")),
-        predictions_smooth
+        predictions_smooth1
     
 )
 
