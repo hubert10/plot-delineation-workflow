@@ -31,7 +31,7 @@ def whitten_image_darken_else_filtering(input_img_path, save_path):
         if isfile(os.path.join(input_img_path, f)) and f.endswith(".jpg")
     ]
     nlyTIFF = Tcl().call("lsort", "-dict", nlyTIFF)
-
+    print(input_img_path)
     if len(nlyTIFF) >= 2:
         for i in range(len(nlyTIFF)):
             grayscale = io.imread(nlyTIFF[i], plugin="matplotlib")
