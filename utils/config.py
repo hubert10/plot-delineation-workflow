@@ -65,4 +65,5 @@ class CustomConfig(Config):
 
 
 # Define ROI Raster
-roi_image = "debi_tiguet_image.tif"
+roi_image = "tile_4096_4096.tif"
+#roi_image = "debi_tiguet_image.tif"
