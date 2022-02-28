@@ -182,11 +182,9 @@ plt.subplot(221)
 plt.title("Testing Image")
 plt.imshow(large_img)
 
-predictions_smooth2 = predictions_smooth > 0.01
-
 plt.subplot(222)
 plt.title("Prediction with smooth blending")
-plt.imshow(predictions_smooth2)
+plt.imshow(predictions_smooth1)
 now = datetime.now()  # current date and time
 time = now.strftime("%m%d%Y_%H%M")
 predictions_smooth1 = predictions_smooth1.astype(np.uint8)

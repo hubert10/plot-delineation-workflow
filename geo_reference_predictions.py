@@ -18,8 +18,7 @@ from utils.config import roi_image
 
 # converts from png to tiff
 
-
-def convert_png_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
+def convert_jpg_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
     # Input png image, to convert as geotiff
     img = rio.open(str(input_img_png))
     img = img.read(1)
@@ -72,4 +71,4 @@ input_img_jpg, georef_img_tif, save_path
 images = list(input_img_jpg.glob("*"))
 
 for idx, val in enumerate(images):
-    convert_png_to_tif_and_save(str(val), save_path, georef_img_tif, idx)
+    convert_jpg_to_tif_and_save(str(val), save_path, georef_img_tif, idx)

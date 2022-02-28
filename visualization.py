@@ -9,13 +9,9 @@ Created on FEB 02/02 at Manobi Africa/ ICRISAT
           Hubert Kanyamahanga - ICRISAT/ Manobi Africa
           Glorie Wowo -  ICRISAT/ Manobi Africa
 """
-import numpy as np
-from datetime import datetime
 import matplotlib.pyplot as plt
 from matplotlib import pyplot
 import rasterio
-from rasterio.merge import merge
-from shapely.geometry import shape
 import matplotlib.pyplot as plt
 import skimage.io as io
 from rasterio.plot import show
