@@ -22,14 +22,14 @@ RCNN_ROOT = os.path.abspath(project_path + "Mask_RCNN")
 os.chdir(RCNN_ROOT)
 print("Printing the current project root dir".format(os.getcwd()))
 
-input_raster = PROJECT_ROOT + "results/Data/inputs/tile_8.tif"
-predicted_raster = PROJECT_ROOT + "results/Data/predicted/tile_8b.tif"
-geo_raster = PROJECT_ROOT + "results/Data/georeferenced/tile_1.tif"
+# input_raster = PROJECT_ROOT + "results/Data/inputs/tile_8.tif"
+# predicted_raster = PROJECT_ROOT + "results/Data/predicted/tile_8b.tif"
+# geo_raster = PROJECT_ROOT + "results/Data/georeferenced/tile_1.tif"
 
 
-# input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
-# predicted_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.jpg"
-# geo_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.tif"
+input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+predicted_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.jpg"
+geo_raster = PROJECT_ROOT + "results/Test/georeferenced/tile_4096_4096.tif"
 
 # ref_image = skimage.io.imread(input_raster)
 # geo_raster = skimage.io.imread(geo_raster)
