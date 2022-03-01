@@ -50,7 +50,8 @@ def convert_jpg_to_tif_and_save(input_img_png, save_path, georef_img_tif, idx):
 
 
 # path of png or jpg image predicted from smoothing algorithm
-input_img_jpg = PROJECT_ROOT + "results/Test/predicted/"
+# input_img_jpg = PROJECT_ROOT + "results/Test/predicted/"
+input_img_jpg = PROJECT_ROOT + "results/Test/filtered/"
 input_img_jpg = input_img_jpg + roi_image.split(".")[0]
 input_img_jpg = pathlib.Path(input_img_jpg)
 
