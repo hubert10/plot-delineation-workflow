@@ -133,7 +133,7 @@ def binary_mask_to_poly_geojson(
     return polygon_gdf
 
 
-input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+input_raster = PROJECT_ROOT + "results/Test/inputs/debi_tiguet_image.tif"
 output_dir = PROJECT_ROOT + "results/Test/refs"
 output_dir = create_dir(output_dir + "/" + roi_image.split(".")[0] + "/")
 os.chdir(output_dir)

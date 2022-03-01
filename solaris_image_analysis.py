@@ -21,8 +21,8 @@ RCNN_ROOT = os.path.abspath(project_path + "Mask_RCNN")
 os.chdir(RCNN_ROOT)
 print("Printing the current project root dir".format(os.getcwd()))
 
-input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
-geo_raster = PROJECT_ROOT + "results/Test/georeferenced/tile_4096_4096.tif"
+input_raster = PROJECT_ROOT + "results/Test/inputs/debi_tiguet_image.tif"
+geo_raster = PROJECT_ROOT + "results/Test/georeferenced/debi_tiguet_image.tif"
 
 input_raster = rasterio.open(input_raster)
 geo_raster = skimage.io.imread(geo_raster)
@@ -44,20 +44,20 @@ result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".geojson"), driver=
 result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".shp"))
 
 
-# For Roi Raster Image
-raster_input_roi = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
-raster_input = rasterio.open(raster_input_roi)
-geo_raster = skimage.io.imread(raster_input_roi)
-roi_geoms = mask.mask_to_poly_geojson(pred_arr=geo_raster, reference_im=raster_input)
+# # For Roi Raster Image
+# raster_input_roi = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+# raster_input = rasterio.open(raster_input_roi)
+# geo_raster = skimage.io.imread(raster_input_roi)
+# roi_geoms = mask.mask_to_poly_geojson(pred_arr=geo_raster, reference_im=raster_input)
 
-roi_result_polys = sol.vector.polygon.georegister_px_df(
-    roi_geoms, affine_obj=raster_input.transform, crs=raster_input.crs
-)
-dir_output = PROJECT_ROOT + "results/Test/inputs"
-output_dir = create_dir(dir_output + "/" + roi_image.split(".")[0])
+# roi_result_polys = sol.vector.polygon.georegister_px_df(
+#     roi_geoms, affine_obj=raster_input.transform, crs=raster_input.crs
+# )
+# dir_output = PROJECT_ROOT + "results/Test/inputs"
+# output_dir = create_dir(dir_output + "/" + roi_image.split(".")[0])
 
-os.chdir(output_dir)
-roi_result_polys.to_file(
-    "{}{}".format(roi_image.split(".")[0], ".geojson"), driver="GeoJSON"
-)
-roi_result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".shp"))
+# os.chdir(output_dir)
+# roi_result_polys.to_file(
+#     "{}{}".format(roi_image.split(".")[0], ".geojson"), driver="GeoJSON"
+# )
+# roi_result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".shp"))

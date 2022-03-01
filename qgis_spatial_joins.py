@@ -16,17 +16,17 @@ from utils.config import roi_image
 os.chdir(PROJECT_ROOT)
 print("Printing the current project root dir".format(os.getcwd()))
 
-input_raster = PROJECT_ROOT + "results/Test/refs/tile_4096_4096/"
+input_raster = PROJECT_ROOT + "results/Test/refs/debi_tiguet_image/"
 # input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096/"
-geo_raster = PROJECT_ROOT + "results/Test/savedfiles/tile_4096_4096/"
+geo_raster = PROJECT_ROOT + "results/Test/savedfiles/debi_tiguet_image/"
 
 pd.set_option("display.max_rows", None)
 pd.set_option("display.max_columns", None)
 pd.set_option("display.width", None)
 pd.set_option("display.max_colwidth", None)
 
-input_raster = gpd.read_file(input_raster + "tile_4096_4096.shp")
-geo_raster = gpd.read_file(geo_raster + "result_polys4.shp")
+input_raster = gpd.read_file(input_raster + "debi_tiguet_image.shp")
+geo_raster = gpd.read_file(geo_raster + "debi_tiguet_image.shp")
 
 raster = gpd.sjoin(input_raster, geo_raster, how="inner", predicate="within")
 raster = raster.drop(["index_right"], axis=1)
