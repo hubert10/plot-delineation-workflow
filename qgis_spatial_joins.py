@@ -28,7 +28,7 @@ pd.set_option("display.max_colwidth", None)
 input_raster = gpd.read_file(input_raster + "debi_tiguet_image.shp")
 geo_raster = gpd.read_file(geo_raster + "debi_tiguet_image.shp")
 
-raster = gpd.sjoin(input_raster, geo_raster, how="inner", predicate="intersects")
+raster = gpd.sjoin(input_raster, geo_raster, how="inner", predicate="within")
 raster = raster.drop(["index_right"], axis=1)
 print(f"Number of ground truth plots: {input_raster.shape}")
 print(f"Number of predicted plots: {geo_raster.shape}")
