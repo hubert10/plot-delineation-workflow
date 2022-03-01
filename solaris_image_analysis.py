@@ -7,29 +7,13 @@ Created on Sun Feb 27 19:14:42 2022
 """
 
 import os
-import cv2
 import skimage
 import rasterio
 import solaris as sol
-import matplotlib.pyplot as plt
 from utils.config import PROJECT_ROOT
 from solaris.vector import mask
-from rasterio.plot import show
-import os
-import cv2
-import matplotlib.pyplot as plt
-import skimage
-from shapely.geometry import shape, Polygon
-import geopandas as gpd
-from rasterio import features
-from rasterio.plot import show
-import skimage
-import rasterio
-from rasterio.plot import show
-from shapely.geometry import Polygon
-
-
-
+from utils.make_dir import create_dir
+from utils.config import roi_image
 
 # Get the project root directory
 project_path = PROJECT_ROOT
@@ -37,146 +21,43 @@ RCNN_ROOT = os.path.abspath(project_path + "Mask_RCNN")
 os.chdir(RCNN_ROOT)
 print("Printing the current project root dir".format(os.getcwd()))
 
+input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+geo_raster = PROJECT_ROOT + "results/Test/georeferenced/tile_4096_4096.tif"
 
-def binary_mask_to_poly_geojson(
-    imagepath,
-    output_path,
-    channel_scaling=None,
-    reference_im=None,
-    cr=None,
-    output_type="geojson",
-    min_area=27,
-    bg_threshold=0,
-    simplify=True,
-    tolerance=15,
-    **kwargs
-):
-    """Get polygons from an image mask.
-    definitions:
-     - A binary mask defines a region of interest (ROI) of an image
-    Arguments
-    ---------
-    pred_arr : :class:`numpy.ndarray`
-        A 2D array of integers. Multi-channel masks are not supported, and must
-        be simplified before passing to this function. Can also pass an image
-        file path here.
-    channel_scaling : :class:`list`-like, optional
-        If `pred_arr` is a 3D array, this argument defines how each channel
-        will be combined to generate a binary output. channel_scaling should
-        be a `list`-like of length equal to the number of channels in
-        `pred_arr`. The following operation will be performed to convert the
-        multi-channel prediction to a 2D output ::
-
-            sum(pred_arr[channel]*channel_scaling[channel])
-
-        If not provided, no scaling will be performend and channels will be
-        summed.
-    reference_im : str, optional
-        The path to a reference geotiff to use for georeferencing the polygons
-        in the mask. Required if saving to a GeoJSON (see the ``output_type``
-        argument), otherwise only required if ``do_transform=True``.
-    output_path : str, optional
-        Path to save the output file to. If not provided, no file is saved.
-    output_type : ``'csv'`` or ``'geojson'``, optional
-        If ``output_path`` is provided, this argument defines what type of file
-        will be generated - a CSV (``output_type='csv'``) or a geojson
-        (``output_type='geojson'``).
-    min_area : int, optional
-        The minimum area of a polygon to retain. Filtering is done AFTER
-        any coordinate transformation, and therefore will be in destination
-        units.
-    bg_threshold : int, optional
-        The cutoff in ``mask_arr`` that denotes background (non-object).
-        Defaults to ``0``.
-    simplify : bool, optional
-        If ``True``, will use the Douglas-Peucker algorithm to simplify edges,
-        saving memory and processing time later. Defaults to ``False``.
-    tolerance : float, optional
-        The tolerance value to use for simplification with the Douglas-Peucker
-        algorithm. Defaults to ``0.5``. Only has an effect if
-        ``simplify=True``.
-
-    Returns
-    -------
-    gdf : :class:`geopandas.GeoDataFrame`
-        A GeoDataFrame of polygons.
-
-    """
-    mask_arr = skimage.io.imread(fname=imagepath)
-    if reference_im is None:
-        with rasterio.open(imagepath) as ref:
-            transform = ref.transform
-            crs = ref.crs
-            ref.close()
-    else:
-        with rasterio.open(reference_im) as ref:
-            transform = ref.transform
-            crs = ref.crs
-            ref.close()
-    mask = mask_arr > bg_threshold
-    mask = mask.astype("uint8")
-
-    polygon_generator = features.shapes(mask_arr, transform=transform, mask=mask)
-    polygons = []
-    values = []  # pixel values for the polygon in mask_arr
-    for polygon, value in polygon_generator:
-        p = shape(polygon).buffer(0.0)
-        if p.area >= min_area:
-            polygons.append(shape(polygon).buffer(0.0))
-            values.append(value)
-
-    polygon_gdf = gpd.GeoDataFrame(
-        {"geometry": polygons, "value": values}, crs=crs.to_wkt()
-    )
-    if simplify:
-        polygon_gdf["geometry"] = polygon_gdf["geometry"].apply(
-            lambda x: x.simplify(tolerance=tolerance)
-        )
-    # changing the crs in case
-    if cr is not None:
-        polygon_gdf = polygon_gdf.to_crs(epsg=cr)
-    # save output files
-    if output_path is not None:
-        if output_type.lower() == "geojson":
-            # if len(polygon_gdf) > 0:
-            polygon_gdf.to_file(output_path, driver="GeoJSON")
-            # else:
-            # save_empty_geojson(output_path, polygon_gdf.crs.to_epsg())
-        elif output_type.lower() == "csv":
-            polygon_gdf.to_csv(output_path, index=False)
-        else:
-            polygon_gdf.to_file(output_path)
-    return polygon_gdf
-
-
-
-
-
-
-
-
-
-
-
-
-
-input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096-4096.tif"
-predicted_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.jpg"
-geo_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.tif"
-
-ref_image = skimage.io.imread(input_raster)
+input_raster = rasterio.open(input_raster)
 geo_raster = skimage.io.imread(geo_raster)
-mask_image = skimage.io.imread(predicted_raster)
 
-pred_geoms = mask.mask_to_poly_geojson(pred_arr=geo_raster, reference_im=ref_image)
+geoms = mask.mask_to_poly_geojson(pred_arr=geo_raster, reference_im=input_raster)
 
-# # Revert the mask to the original crs and affine tranformation for matching.
-# result_polys = sol.vector.polygon.georegister_px_df(
-#     geoms, affine_obj=ref_image.transform, crs=ref_image.crs
-# )
-# # unary_union(result_polys['geometry'])
-# print("+++++++++++++Input geometries+++++++++++")
-# print(ref_image.head())
+result_polys = sol.vector.polygon.georegister_px_df(
+    geoms, affine_obj=input_raster.transform, crs=input_raster.crs
+)
+print(result_polys.head())
 
-print("-------------Predictions geometries-------")
-print(pred_geoms.head())
+# Save Output to the shape files
+# Create dir for saving predictions
+dir_output = PROJECT_ROOT + "results/Test/savedfiles"
+output_dir = create_dir(dir_output + "/" + roi_image.split(".")[0])
+
+os.chdir(output_dir)
+result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".geojson"), driver="GeoJSON")
+result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".shp"))
+
+
+# For Roi Raster Image
+raster_input_roi = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+raster_input = rasterio.open(raster_input_roi)
+geo_raster = skimage.io.imread(raster_input_roi)
+roi_geoms = mask.mask_to_poly_geojson(pred_arr=geo_raster, reference_im=raster_input)
+
+roi_result_polys = sol.vector.polygon.georegister_px_df(
+    roi_geoms, affine_obj=raster_input.transform, crs=raster_input.crs
+)
+dir_output = PROJECT_ROOT + "results/Test/inputs"
+output_dir = create_dir(dir_output + "/" + roi_image.split(".")[0])
+
+os.chdir(output_dir)
+roi_result_polys.to_file(
+    "{}{}".format(roi_image.split(".")[0], ".geojson"), driver="GeoJSON"
+)
+roi_result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".shp"))

@@ -1,38 +1,23 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Sun Feb 27 19:14:42 2022
+Created on Friday May 20 16:31:20 2020
 
-@author: hubert
+@author: hubert K.
 """
-
 import os
-import cv2
 import skimage
 import rasterio
-import solaris as sol
-import matplotlib.pyplot as plt
-from utils.config import PROJECT_ROOT
-from solaris.vector import mask
-from rasterio.plot import show
-import os
-import cv2
-import matplotlib.pyplot as plt
-import skimage
-from shapely.geometry import shape, Polygon
+from shapely.geometry import shape
 import geopandas as gpd
 from rasterio import features
-from rasterio.plot import show
-import skimage
-import rasterio
-from rasterio.plot import show
-from shapely.geometry import Polygon
-
+import geopandas as gpd
+from utils.config import PROJECT_ROOT
+from utils.make_dir import create_dir
+from utils.config import roi_image
 
 # Get the project root directory
-project_path = PROJECT_ROOT
-RCNN_ROOT = os.path.abspath(project_path + "Mask_RCNN")
-os.chdir(RCNN_ROOT)
+os.chdir(PROJECT_ROOT)
 print("Printing the current project root dir".format(os.getcwd()))
 
 
@@ -144,26 +129,77 @@ def binary_mask_to_poly_geojson(
             polygon_gdf.to_csv(output_path, index=False)
         else:
             polygon_gdf.to_file(output_path)
+    print(polygon_gdf)
     return polygon_gdf
 
 
-input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096-4096.tif"
-predicted_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.jpg"
-geo_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.tif"
+input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+output_dir = PROJECT_ROOT + "results/Test/refs"
+output_dir = create_dir(output_dir + "/" + roi_image.split(".")[0] + "/")
+os.chdir(output_dir)
 
-ref_image = skimage.io.imread(input_raster)
-geo_raster = skimage.io.imread(geo_raster)
-mask_image = skimage.io.imread(predicted_raster)
-
-pred_geoms = mask.mask_to_poly_geojson(pred_arr=geo_raster, reference_im=ref_image)
-
-# # Revert the mask to the original crs and affine tranformation for matching.
-# result_polys = sol.vector.polygon.georegister_px_df(
-#     geoms, affine_obj=ref_image.transform, crs=ref_image.crs
+# binary_mask_to_poly_geojson(
+#     input_raster,
+#     output_dir,
+#     channel_scaling=None,
+#     reference_im=None,
+#     cr=None,
+#     output_type="geojson",
+#     min_area=0.000000032,
+#     bg_threshold=0,
+#     simplify=True,
+#     tolerance=0.00005,
 # )
-# # unary_union(result_polys['geometry'])
-# print("+++++++++++++Input geometries+++++++++++")
-# print(ref_image.head())
 
-print("-------------Predictions geometries-------")
-print(pred_geoms.head())
+
+import numpy as np
+from shapely.geometry import shape
+from shapely.geometry import Polygon
+import geopandas as gpd
+import pandas as pd
+import rasterio
+from rasterio import features
+from affine import Affine
+from skimage.morphology import square, erosion, dilation
+import os
+from tqdm.auto import tqdm
+from osgeo import ogr
+from osgeo import osr, gdal
+
+
+class Polygonized:
+    def mask_to_raster(input_path, output_shp):
+        """Transforme mask into vector file(Geojson) .
+
+    Arguments
+    ---------
+    input_path : Str
+        Pathto the image .
+    output_path : Str
+        Path to the output produced .
+
+    Returns
+    -------
+    A vector file of the raster.
+
+    Notes
+    -----
+    This functions depends on "gdal" and its subfunctions.
+    """
+        # name='/home/nteupe/building/mask.tif'
+        open_image = gdal.Open(input_path)
+        input_band = open_image.GetRasterBand(1)
+        # create output data source
+        # output_shp = "/home/nteupe/all_results/all/ZZ34"
+        shp_driver = ogr.GetDriverByName("ESRI Shapefile")
+        prj = open_image.GetProjection()
+        # create output file name
+        output_shapefile = shp_driver.CreateDataSource(output_shp + ".shp")
+        new_shapefile = output_shapefile.CreateLayer(
+            output_shp, srs=osr.SpatialReference(wkt=prj)
+        )
+        gdal.Polygonize(input_band, input_band, new_shapefile, -1, [], callback=None)
+        new_shapefile.SyncToDisk()
+
+
+Polygonized.mask_to_raster(input_raster, output_dir)

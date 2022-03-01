@@ -27,9 +27,9 @@ print("Printing the current project root dir".format(os.getcwd()))
 # geo_raster = PROJECT_ROOT + "results/Data/georeferenced/tile_1.tif"
 
 
-input_raster = PROJECT_ROOT + "results/Test/inputs/tile_4096_4096.tif"
+input_raster = PROJECT_ROOT + "results/Test/inputs/debi_tiguet_image.tif"
 predicted_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.jpg"
-geo_raster = PROJECT_ROOT + "results/Test/georeferenced/tile_4096_4096.tif"
+geo_raster = PROJECT_ROOT + "results/Test/georeferenced/debi_tiguet_image.tif"
 
 # ref_image = skimage.io.imread(input_raster)
 # geo_raster = skimage.io.imread(geo_raster)

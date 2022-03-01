@@ -61,8 +61,9 @@ import skimage
 import matplotlib.pyplot as plt
 
 import rasterio
+
 ref_image = rasterio.open(geo_raster)
-#mask_image_rst = rasterio.open(r"E:\PlotDel_Steven\Data\subimages_geo_ref_pred1.tif")
+# mask_image_rst = rasterio.open(r"E:\PlotDel_Steven\Data\subimages_geo_ref_pred1.tif")
 
 mask_image = skimage.io.imread(geo_raster)
 
