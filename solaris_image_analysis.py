@@ -40,7 +40,9 @@ dir_output = PROJECT_ROOT + "results/Test/savedfiles"
 output_dir = create_dir(dir_output + "/" + roi_image.split(".")[0])
 
 os.chdir(output_dir)
-result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".geojson"), driver="GeoJSON")
+result_polys.to_file(
+    "{}{}".format(roi_image.split(".")[0], ".geojson"), driver="GeoJSON"
+)
 result_polys.to_file("{}{}".format(roi_image.split(".")[0], ".shp"))
 
 

@@ -35,3 +35,9 @@ print(f"Number of predicted plots: {geo_raster.shape}")
 print()
 print(f"Number of plots well predicted: {len(raster)}")
 print(raster.head())
+
+os.chdir(PROJECT_ROOT)
+
+input_raster.to_csv(PROJECT_ROOT + "results/Test/analysis/debi_tiguet_input_raster.csv")
+geo_raster.to_csv(PROJECT_ROOT + "results/Test/analysis/debi_tiguet_geo_raster.csv")
+raster.to_csv(PROJECT_ROOT + "results/Test/analysis/debi_tiguet_predicted_raster.csv")
