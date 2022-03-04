@@ -10,11 +10,6 @@ Created on FEB 02/02 at Manobi Africa/ ICRISAT
           Glorie Wowo -  ICRISAT/ Manobi Africa
 """
 
-
-"""
-Import Necesaary libraries
-
-"""
 import cv2
 import json
 import os

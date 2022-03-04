@@ -13,7 +13,7 @@
 #SBATCH --nodes=1  # Run all processes on a single node
 #SBATCH --ntasks=1  # Run only task
 #SBATCH --cpus-per-task=32 # Number of CPU cores per task
-#SBATCH --mem=1000gb        # Total memory limit
+#SBATCH --mem=700gb        # Total memory limit
 
 # Specifies how long the job will be allowed to run in HH:MM:SS.
 #SBATCH --time=7:00:00 # Expected run time for this job task
