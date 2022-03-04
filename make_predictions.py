@@ -1,7 +1,8 @@
 """
-Created on FEB 02/02 at Manobi Africa/ ICRISAT 
+Created on FEB 02/02/2022 at Manobi Africa/ ICRISAT 
 
-@Contributors: Pierre C. Traore - ICRISAT/ Manobi Africa
+@Contributors: 
+          Pierre C. Traore - ICRISAT/ Manobi Africa
           Steven Ndung'u' - ICRISAT/ Manobi Africa
           Joel Nteupe - Manobi Africa
           John bagiliko - ICRISAT Intern
@@ -17,13 +18,10 @@ from datetime import datetime
 from skimage import io, color
 import matplotlib.pyplot as plt
 import skimage.io as io
-from tkinter import Tcl
 import tensorflow as tf
-from patchify import patchify, unpatchify
 from utils.config import CustomConfig, PROJECT_ROOT
 from utils.make_dir import create_dir
 from utils.config import roi_image
-from IPython import get_ipython
 
 # Set this to True to see more logs details
 os.environ["AUTOGRAPH_VERBOSITY"] = "5"
@@ -32,7 +30,6 @@ tf.cast
 import warnings
 
 warnings.filterwarnings("ignore")
-# get_ipython().system('nvidia-smi')
 
 ##########################################################################################################################
 ##########################################################################################################################
@@ -44,10 +41,10 @@ warnings.filterwarnings("ignore")
 Steps:
     
 1. Load the ROI raster image
- For this case, Get satelite imagery of your area of interest.
+ For this case, Get satellite imagery of your area of interest.
 2. Convert the raster into  np.array after resizing it to be divisible by our patch_size:1024 for Mask-RCNN 
-3. CAll the model to detect plot boundaries and return masksas one masked image 
-4. Perform local predictions on each patch using Smoothing Blending Algo, with rotations and miroring each patch
+3. Call the model to detect plot boundaries and return masks as one masked image 
+4. Perform local predictions on each tile on overlapping patches using Smoothing Blending Algo, with rotations and mirroring each patch
 5. Merge all patches together
 """
 ##########################################################################################################################
@@ -58,7 +55,7 @@ Steps:
 # !git clone https://github.com/BupyeongHealer/Mask_RCNN_tf_2.x.git for tf 2.x  #Steven
 # installtensorflow 2.3.0 and keras 2.4
 # !pip install tensorflow==2.3.0
-# !pip install keras==2.4
+# !pip install keras==2.4.0
 # !pip install --upgrade h5py==2.10.0
 """
 
@@ -114,7 +111,7 @@ model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_nam
 # Load Large Image
 img = cv2.imread(PROJECT_ROOT + "samples/roi/" + roi_image)  # BGR
 # img = cv2.imread(PROJECT_ROOT + "samples/roi/debi_tiguet_image.tif")  # BGR
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # Opencv reads images as BGR
 
 patch_size = 1024
 
@@ -168,14 +165,14 @@ predictions_smooth = predict_img_with_smooth_windowing(
     large_img,
     window_size=1024,
     subdivisions=2,  # Minimal amount of overlap for windowing. Must be an even number.
-    nb_classes=3,
+    nb_classes=1,
     pred_func=(func_pred),
 )
 end_time = datetime.now()
 
 print("Duration: {}".format(end_time - start_time))
 
-predictions_smooth1 = color.rgb2gray(predictions_smooth)
+predictions_smooth_gray = color.rgb2gray(predictions_smooth)
 
 plt.figure(figsize=(12, 12))
 plt.subplot(221)
@@ -184,10 +181,9 @@ plt.imshow(large_img)
 
 plt.subplot(222)
 plt.title("Prediction with smooth blending")
-plt.imshow(predictions_smooth1)
+plt.imshow(predictions_smooth_gray)
 now = datetime.now()  # current date and time
 time = now.strftime("%m%d%Y_%H%M")
-predictions_smooth1 = predictions_smooth1.astype(np.uint8)
 
 # Create dir for saving predictions
 dir_output = PROJECT_ROOT + "results/Test/predicted"

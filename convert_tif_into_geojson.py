@@ -194,5 +194,5 @@ class Polygonized:
         gdal.Polygonize(input_band, input_band, new_shapefile, -1, [], callback=None)
         new_shapefile.SyncToDisk()
 
-Polygonized.mask_to_raster(input_raster, output_dir)
 
+Polygonized.mask_to_raster(input_raster, output_dir)

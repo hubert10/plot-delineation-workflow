@@ -74,4 +74,3 @@ save_path = pathlib.Path(output_dir)
 
 # Function call
 whitten_image_darken_else_filtering(input_path, save_path)
-

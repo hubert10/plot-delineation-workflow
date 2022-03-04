@@ -1,27 +1,7 @@
-import cv2
 import json
 import os
-import PIL
 import numpy as np
-from datetime import datetime
-from skimage import io, color
 import matplotlib.pyplot as plt
-from numpy import asarray
-from numpy import savetxt
-from osgeo import gdal
-import skimage
-import geopandas as gpd
-import rasterio
-from rasterio import features
-import rasterio as rio
-from rasterio.merge import merge
-from rasterio import windows
-from shapely.geometry import shape
-from shapely.geometry import Polygon
-import matplotlib.pyplot as plt
-import skimage.io as io
-import matplotlib.image as mpimg
-from tkinter import Tcl
 import tensorflow as tf
 
 # Set this to True to see more logs details

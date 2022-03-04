@@ -26,7 +26,6 @@ print("Printing the current project root dir".format(os.getcwd()))
 # predicted_raster = PROJECT_ROOT + "results/Data/predicted/tile_8b.tif"
 # geo_raster = PROJECT_ROOT + "results/Data/georeferenced/tile_1.tif"
 
-
 input_raster = PROJECT_ROOT + "results/Test/inputs/debi_tiguet_image.tif"
 predicted_raster = PROJECT_ROOT + "results/Test/predicted/tile_4096_4096.jpg"
 geo_raster = PROJECT_ROOT + "results/Test/georeferenced/debi_tiguet_image.tif"

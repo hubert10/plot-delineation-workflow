@@ -1,8 +1,9 @@
-# [TF 2.X] Mask R-CNN for Plot Delineation as an application of Object detection and Segmentation
+# [TF 2.X] Mask R-CNN for Plot Delineation as an application of Object detection and Semantic Segmentation.
+
+What we are trying to do here is that we take our images and we divide them into overlapping patches, andin that overallaped region, we are blending them in a Gaussian way  to get smooths predictions.
 
 
 [Notice] : The original mask-rcnn uses the tensorflow 1.X version. I modified it for tensorflow 2.X version.
-
 
 
 ### Development Environment
@@ -13,11 +14,11 @@
 
 - CUDA : 11.2
 
-- Tensorflow : 2.5.0
+- Tensorflow : 2.3.0
 
-- Keras : 2.5.0 (tensorflow backend)
+- Keras : 2.4.0 (tensorflow backend)
 
-- Python 3.8
+- Python 3.9
 
 
 This is an implementation of [Mask R-CNN](https://arxiv.org/abs/1703.06870) on Python 3, Keras, and TensorFlow. The model generates bounding boxes and segmentation masks for each instance of an object in the image. It's based on Feature Pyramid Network (FPN) and a ResNet101 backbone.

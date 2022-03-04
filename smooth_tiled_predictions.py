@@ -46,7 +46,7 @@ else:
 
 def _spline_window(window_size, power=2):
     """
-    Squared spline (power=2) window function:
+    Squared spline (power=2) window interpolation function:
     https://www.wolframalpha.com/input/?i=y%3Dx**2,+y%3D-(x-2)**2+%2B2,+y%3D(x-4)**2,+from+y+%3D+0+to+2
     """
     intersection = int(window_size / 4)
