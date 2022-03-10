@@ -181,9 +181,7 @@ def _reproject(
 def reproject_to_utm(
     input_data, input_type, input_crs=None, dest_path=None, resampling_method="bicubic"
 ):
-    """Convert an input to a UTM CRS (after determining the correct UTM zone).
-
-    """
+    """Convert an input to a UTM CRS (after determining the correct UTM zone)."""
     if input_crs is None:
         input_crs = get_crs(input_data)
     if input_crs is None:

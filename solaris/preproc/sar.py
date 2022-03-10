@@ -95,7 +95,7 @@ class Conjugate(PipeSegment):
 
 class MultiplyConjugate(PipeSegment):
     """
-    Given an iterable of two images, multiply the first 
+    Given an iterable of two images, multiply the first
     by the complex conjugate of the second.
     """
 
@@ -656,7 +656,7 @@ class CapellaGridCommonWindow(PipeSegment):
 
     def fineoffset(self, latgrid, longrid, lattarget, lontarget, uidx, vidx):
         """
-        Given grids of almost-equally-spaced latitude and longitude, and an 
+        Given grids of almost-equally-spaced latitude and longitude, and an
         exact latitude-longitude pair to aim for, and indices of the (ideally)
         nearest point to that lat-long target, returns a first-order estimate
         of the target offset, in pixels, relative to the specified point.
@@ -667,8 +667,8 @@ class CapellaGridCommonWindow(PipeSegment):
         ulon = longrid[uidx + 1, vidx] - longrid[uidx, vidx]
         vlat = latgrid[uidx, vidx + 1] - latgrid[uidx, vidx]
         vlon = longrid[uidx, vidx + 1] - longrid[uidx, vidx]
-        uoffset = (mlat * ulat + mlon * ulon) / (ulat ** 2 + ulon ** 2)
-        voffset = (mlat * vlat + mlon * vlon) / (vlat ** 2 + vlon ** 2)
+        uoffset = (mlat * ulat + mlon * ulon) / (ulat**2 + ulon**2)
+        voffset = (mlat * vlat + mlon * vlon) / (vlat**2 + vlon**2)
         return uoffset, voffset
 
 

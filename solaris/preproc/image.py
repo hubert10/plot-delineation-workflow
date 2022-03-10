@@ -553,7 +553,7 @@ class SetMask(PipeSegment):
     """
     Given an image and a mask, apply the mask to the image.
     More specifically, set the image's pixel value to NaN
-    (or other specified value) for every pixel where the 
+    (or other specified value) for every pixel where the
     mask value is False.
     """
 

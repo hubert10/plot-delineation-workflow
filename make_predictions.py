@@ -17,7 +17,6 @@ import numpy as np
 from datetime import datetime
 from skimage import io, color
 import matplotlib.pyplot as plt
-import skimage.io as io
 import tensorflow as tf
 from utils.config import CustomConfig, PROJECT_ROOT
 from utils.make_dir import create_dir
@@ -68,7 +67,6 @@ print("Printing the current project root dir".format(os.getcwd()))
 # Import Mask RCNN
 from Mask_RCNN.mrcnn import utils
 import Mask_RCNN.mrcnn.model as modellib
-from Mask_RCNN.mrcnn.model import log
 from PIL import Image
 
 with open("mrcnn/model.py") as f:
@@ -111,7 +109,7 @@ model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_nam
 # Load Large Image
 img = cv2.imread(PROJECT_ROOT + "samples/roi/" + roi_image)  # BGR
 # img = cv2.imread(PROJECT_ROOT + "samples/roi/debi_tiguet_image.tif")  # BGR
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB) # Opencv reads images as BGR
+img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Opencv reads images as BGR
 
 patch_size = 1024
 

@@ -7,7 +7,7 @@ from .iou import calculate_iou
 
 
 def average_score_by_class(ious, threshold=0.5):
-    """ for a list of object ious by class, test if they are a counted as a
+    """for a list of object ious by class, test if they are a counted as a
     positive or a negative.
     Arguments
     ---------
@@ -42,7 +42,7 @@ def get_all_objects(
     gt_cat_attrib="make",
     file_format="geojson",
 ):
-    """ Using the proposal and ground truth polygons, calculate the total.
+    """Using the proposal and ground truth polygons, calculate the total.
     Filenames of predictions and ground-truth must be identical.
     unique classes present in each
     Arguments
@@ -107,7 +107,7 @@ def precision_calc(
     threshold=0.5,
     file_format="geojson",
 ):
-    """ Using the proposal and ground truth polygons, calculate precision metrics.
+    """Using the proposal and ground truth polygons, calculate precision metrics.
     Filenames of predictions and ground-truth must be identical.  Will only
     calculate metric for classes that exist in the ground truth.
     Arguments
@@ -234,7 +234,7 @@ def recall_calc(
     threshold=0.5,
     file_format="geojson",
 ):
-    """ Using the proposal and ground truth polygons, calculate recall metrics.
+    """Using the proposal and ground truth polygons, calculate recall metrics.
     Filenames of predictions and ground-truth must be identical. Will only
     calculate metric for classes that exist in the ground truth.
     Arguments
@@ -346,7 +346,7 @@ def mF1(
     file_format="geojson",
     all_outputs=False,
 ):
-    """ Using the proposal and ground truth polygons, calculate F1 and mF1
+    """Using the proposal and ground truth polygons, calculate F1 and mF1
     metrics. Filenames of predictions and ground-truth must be identical.  Will
     only calculate metric for classes that exist in the ground truth.
     Arguments
@@ -471,7 +471,7 @@ def mAP_score(
     confidence_attrib="confidence",
     file_format="geojson",
 ):
-    """ Using the proposal and ground truth polygons calculate the Mean Average
+    """Using the proposal and ground truth polygons calculate the Mean Average
     Precision (mAP) and  mF1 metrics. Filenames of predictions and ground-truth
     must be identical.  Will only calculate metric for classes that exist in
     the ground truth.

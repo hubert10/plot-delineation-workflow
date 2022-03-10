@@ -4,18 +4,18 @@ import numpy as np
 import matplotlib.pyplot as plt
 import tensorflow as tf
 
+
 # Set this to True to see more logs details
 os.environ["AUTOGRAPH_VERBOSITY"] = "5"
 tf.autograph.set_verbosity(3, False)
 tf.cast
-from patchify import patchify, unpatchify
 import warnings
 
 warnings.filterwarnings("ignore")
 from utils.config import CustomConfig
-from IPython import get_ipython
 
-# get_ipython().system('nvidia-smi')
+tf.compat.v1.disable_eager_execution()
+
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -52,9 +52,8 @@ This will default to sub-directories in your mask_rcnn_dir, but if you want them
 
 It will also download the pre-trained coco model.
 """
-
-# Directory to save logs and trained model
-MODEL_DIR = os.path.join(RCNN_ROOT, "logs")
+# Directory to save logs and trained model while training for backup
+DEFAULT_LOGS_DIR = os.path.join(RCNN_ROOT, "logs")
 
 # Local path to trained weights file
 COCO_MODEL_PATH = os.path.join(RCNN_ROOT, "mask_rcnn_coco.h5")
@@ -74,7 +73,7 @@ class CustomDataset(utils.Dataset):
     See http://cocodataset.org/#home for more information.
     """
 
-    def load_custom(self, annotation_json, images_dir, dataset_type="train"):
+    def load_custom_train(self, annotation_json, images_dir, dataset_type="train"):
         """Load the coco-like dataset from json
         Args:
             annotation_json: The path to the coco annotations json file
@@ -82,7 +81,7 @@ class CustomDataset(utils.Dataset):
         """
 
         # Load json from file
-        print("Annotation json path: ", annotation_json)
+        print("Annotation json path for train.: ", annotation_json)
         json_file = open(annotation_json)
         coco_json = json.load(json_file)
         json_file.close()
@@ -156,12 +155,12 @@ class CustomDataset(utils.Dataset):
     def load_custom_val(self, annotation_json, images_dir, dataset_type="val"):
         """Load the coco-like dataset from json
         Args:
-            annotation_json: The path to the coco annotations json file
+            annotation_json: The path to the train annotations json file in coco format
             images_dir: The directory holding the images referred to by the json file
         """
 
         # Load json from file
-        print("Annotation json path: ", annotation_json)
+        print("Annotation json path for val.: ", annotation_json)
         json_file = open(annotation_json)
         coco_json = json.load(json_file)
         json_file.close()
@@ -286,9 +285,10 @@ class CustomDataset(utils.Dataset):
 
 def display_image_samples(dataset_train):
     # Load and display random samples
-    image_ids = np.random.choice(dataset_train.image_ids, 4)
-
+    image_ids = np.random.choice(2, 4)
+    print(dataset_train.image_ids)
     for image_id in image_ids:
+        print(image_id)
         image = dataset_train.load_image(image_id)
         mask, class_ids = dataset_train.load_mask(image_id)
         visualize.display_top_masks(image, mask, class_ids, dataset_train.class_names)
@@ -296,8 +296,10 @@ def display_image_samples(dataset_train):
 
 # Load the pre-trained model
 def load_training_model(config):
-    model = modellib.MaskRCNN(mode="training", config=config, model_dir=MODEL_DIR)
-
+    model = modellib.MaskRCNN(
+        mode="training", config=config, model_dir=DEFAULT_LOGS_DIR
+    )
+    print(model)
     # Which weights to start with?
     init_with = "coco"  # imagenet, coco, or last
 
@@ -321,19 +323,19 @@ def load_training_model(config):
 
 
 # load taining image data
-def load_image_dataset(annotation_path, dataset_path, dataset_type):
+def load_image_dataset_train(annotation_path, dataset_path, dataset_type):
     dataset_train = CustomDataset()
-    dataset_train.load_custom(annotation_path, dataset_path, dataset_type)
+    dataset_train.load_custom_train(annotation_path, dataset_path, dataset_type)
     dataset_train.prepare()
     return dataset_train
 
 
-# load validation dataset
+# load validation image data
 def load_image_dataset_val(annotation_path, dataset_path, dataset_type):
-    dataset_train = CustomDataset()
-    dataset_train.load_custom_val(annotation_path, dataset_path, dataset_type)
-    dataset_train.prepare()
-    return dataset_train
+    dataset_val = CustomDataset()
+    dataset_val.load_custom_val(annotation_path, dataset_path, dataset_type)
+    dataset_val.prepare()
+    return dataset_val
 
 
 """
@@ -343,7 +345,7 @@ Train the model  in two stages:
 (i.e. the ones that we didn't use pre-trained weights from MS COCO). To train only the head layers, 
  pass layers='heads' to the train() function.
 
-2. Fine-tune all layers.Simply pass layers="all to train all layers.
+2. Fine-tune all layers. Simply pass layers="all to train all layers.
 
 TODO: Update the parameters.
 """
@@ -353,7 +355,7 @@ TODO: Update the parameters.
 
 def train_head(
     model, dataset_train, dataset_val, config, epochs
-):  # Removed the model  and added epochs parameter
+):  # Removed the model and added epochs parameter
     model.train(
         dataset_train,
         dataset_val,
@@ -363,10 +365,10 @@ def train_head(
     )
 
 
-# treain all layers
+# train all layers
 def train_all_layers(
     model, dataset_train, dataset_val, config, epochs
-):  # Removed the model  and added epochs parameter
+):  # Removed the model and added epochs parameter
     model.train(
         dataset_train,
         dataset_val,
@@ -382,22 +384,31 @@ def train_all_layers(
 
 # Define the data paths
 
-path = "path to the training dataset prepared"
-annotations_path = "annotation_path #json file"
-dataset_train = load_image_dataset(annotations_path, path, "train")
-dataset_val = load_image_dataset_val(annotations_path, path, "val")
+path_dataset = PROJECT_ROOT + "dataset/train"
+annotations_path_train = PROJECT_ROOT + "dataset/annotations.json"
+annotations_path_val = PROJECT_ROOT + "dataset/annotations.json"
+dataset_train = load_image_dataset_train(annotations_path_train, path_dataset, "train")
+dataset_val = load_image_dataset_val(annotations_path_val, path_dataset, "val")
+class_number = dataset_train.count_classes()
 
-# Load and display random samples
-display_image_samples(dataset_train)
-display_image_samples(dataset_val)
+print("Train: %d" % len(dataset_train.image_ids))
+print("Validation: %d" % len(dataset_val.image_ids))
+print("Classes: {}".format(class_number))
+
+# print(dataset_train._image_ids)
+# # # Load and display random samples
+#
 
 
+# Load Configuration
 # train both the head and layers
-model = load_training_model()
 class_number = 1
 config = CustomConfig(class_number)
+config.display()
+model = load_training_model(config)
 
-# The model will be saved after evry epoch
+
+# The model will be saved after every epoch
 train_head(model, dataset_train, dataset_val, config, epochs=15)
 train_all_layers(model, dataset_train, dataset_val, config, epochs=15)
 

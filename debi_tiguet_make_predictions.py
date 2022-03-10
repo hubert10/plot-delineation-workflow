@@ -136,85 +136,86 @@ model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_nam
 
 # Apply a trained model on large image
 print(PROJECT_ROOT)
-img = cv2.imread(PROJECT_ROOT + "samples/roi/debi_tiguet_image.tif")  # BGR
+img = cv2.imread(PROJECT_ROOT + "samples/roi/MaliDec2016/Couche_gamma.shp")  # BGR
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 patch_size = 1024
+print(img.shape)
 
-SIZE_X = (
-    img.shape[1] // patch_size
-) * patch_size  # Nearest size divisible by our patch size
-SIZE_Y = (
-    img.shape[0] // patch_size
-) * patch_size  # Nearest size divisible by our patch size
-large_img = Image.fromarray(img)
-PIL.Image.MAX_IMAGE_PIXELS = 933120000
-large_img = large_img.crop((0, 0, SIZE_X, SIZE_Y))  # Crop from top left corner
-# image = image.resize((SIZE_X, SIZE_Y))  #Try not to resize for semantic segmentation
-large_img = np.array(large_img)
+# SIZE_X = (
+#     img.shape[1] // patch_size
+# ) * patch_size  # Nearest size divisible by our patch size
+# SIZE_Y = (
+#     img.shape[0] // patch_size
+# ) * patch_size  # Nearest size divisible by our patch size
+# large_img = Image.fromarray(img)
+# PIL.Image.MAX_IMAGE_PIXELS = 933120000
+# large_img = large_img.crop((0, 0, SIZE_X, SIZE_Y))  # Crop from top left corner
+# # image = image.resize((SIZE_X, SIZE_Y))  #Try not to resize for semantic segmentation
+# large_img = np.array(large_img)
 
-# Import the smooth tile stitching while stitching.
-from smooth_tiled_predictions import predict_img_with_smooth_windowing
-
-
-def predict_image(tile_image):
-    results = model.detect([tile_image])
-    mask_generated = results[0]["masks"]
-    masked_img = np.any(mask_generated.astype(np.bool), axis=-1)
-    masked_img = np.stack((masked_img,) * 3, axis=-1)
-    return masked_img
+# # Import the smooth tile stitching while stitching.
+# from smooth_tiled_predictions import predict_img_with_smooth_windowing
 
 
-def func_pred(img_batch_subdiv):
-    res = map(
-        lambda img_batch_subdiv: predict_image(img_batch_subdiv), img_batch_subdiv
-    )
-    subdivs = np.array(list(res))
-    return subdivs
+# def predict_image(tile_image):
+#     results = model.detect([tile_image])
+#     mask_generated = results[0]["masks"]
+#     masked_img = np.any(mask_generated.astype(np.bool), axis=-1)
+#     masked_img = np.stack((masked_img,) * 3, axis=-1)
+#     return masked_img
 
 
-now = datetime.now()
-start_time = now
-starting_time = now.strftime("%m-%d-%Y, %H:%M:%S")
-print(
-    "+++++++++++++++++++++++++++  Starting Prediction at: {} +++++++++++++++++++++++++++ ".format(
-        starting_time
-    )
-)
+# def func_pred(img_batch_subdiv):
+#     res = map(
+#         lambda img_batch_subdiv: predict_image(img_batch_subdiv), img_batch_subdiv
+#     )
+#     subdivs = np.array(list(res))
+#     return subdivs
 
-predictions_smooth = predict_img_with_smooth_windowing(
-    large_img,
-    window_size=1024,
-    subdivisions=2,  # Minimal amount of overlap for windowing. Must be an even number.
-    nb_classes=3,
-    pred_func=(func_pred),
-)
 
-end_time = datetime.now()
+# now = datetime.now()
+# start_time = now
+# starting_time = now.strftime("%m-%d-%Y, %H:%M:%S")
+# print(
+#     "+++++++++++++++++++++++++++  Starting Prediction at: {} +++++++++++++++++++++++++++ ".format(
+#         starting_time
+#     )
+# )
 
-print("Duration: {}".format(end_time - start_time))
+# predictions_smooth = predict_img_with_smooth_windowing(
+#     large_img,
+#     window_size=1024,
+#     subdivisions=2,  # Minimal amount of overlap for windowing. Must be an even number.
+#     nb_classes=3,
+#     pred_func=(func_pred),
+# )
 
-predictions_smooth1 = color.rgb2gray(predictions_smooth)
+# end_time = datetime.now()
 
-plt.figure(figsize=(12, 12))
-plt.subplot(221)
-plt.title("Testing Image")
-plt.imshow(large_img)
+# print("Duration: {}".format(end_time - start_time))
 
-predictions_smooth2 = predictions_smooth > 0.01
+# predictions_smooth1 = color.rgb2gray(predictions_smooth)
 
-plt.subplot(222)
-plt.title("Prediction with smooth blending")
-plt.imshow(predictions_smooth2)
-now = datetime.now()  # current date and time
-time = now.strftime("%m%d%Y_%H%M")
-predictions_smooth1 = predictions_smooth1.astype(np.uint8)
+# plt.figure(figsize=(12, 12))
+# plt.subplot(221)
+# plt.title("Testing Image")
+# plt.imshow(large_img)
 
-io.imsave(
-    os.path.join(
-        PROJECT_ROOT + "Output", "pred_debi_tiguet_tile{}{}".format(str(time), ".jpg")
-    ),
-    predictions_smooth1,
-)
+# predictions_smooth2 = predictions_smooth > 0.01
+
+# plt.subplot(222)
+# plt.title("Prediction with smooth blending")
+# plt.imshow(predictions_smooth2)
+# now = datetime.now()  # current date and time
+# time = now.strftime("%m%d%Y_%H%M")
+# predictions_smooth1 = predictions_smooth1.astype(np.uint8)
+
+# io.imsave(
+#     os.path.join(
+#         PROJECT_ROOT + "Output", "pred_debi_tiguet_tile{}{}".format(str(time), ".jpg")
+#     ),
+#     predictions_smooth1,
+# )
 
 # im = Image.fromarray(predictions_smooth)
 # im.save(

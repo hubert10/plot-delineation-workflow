@@ -144,8 +144,10 @@ class Evaluator:
                             self.proposal_GDF.loc[
                                 pred_row.name, iou_field
                             ] = max_iou_row["iou_score"]
-                            self.ground_truth_GDF_Edit = self.ground_truth_GDF_Edit.drop(
-                                max_iou_row.name, axis=0
+                            self.ground_truth_GDF_Edit = (
+                                self.ground_truth_GDF_Edit.drop(
+                                    max_iou_row.name, axis=0
+                                )
                             )
                         else:
                             self.proposal_GDF.loc[pred_row.name, iou_field] = 0
@@ -292,8 +294,10 @@ class Evaluator:
                             self.proposal_GDF.loc[
                                 pred_row.name, iou_field
                             ] = max_iou_row["iou_score"]
-                            self.ground_truth_GDF_Edit = self.ground_truth_GDF_Edit.drop(
-                                max_iou_row.name, axis=0
+                            self.ground_truth_GDF_Edit = (
+                                self.ground_truth_GDF_Edit.drop(
+                                    max_iou_row.name, axis=0
+                                )
                             )
                         else:
                             self.proposal_GDF.loc[pred_row.name, iou_field] = 0
@@ -426,8 +430,10 @@ class Evaluator:
                             self.proposal_GDF.loc[
                                 pred_row.name, iou_field
                             ] = max_iou_row["iou_score"]
-                            self.ground_truth_GDF_Edit = self.ground_truth_GDF_Edit.drop(
-                                max_iou_row.name, axis=0
+                            self.ground_truth_GDF_Edit = (
+                                self.ground_truth_GDF_Edit.drop(
+                                    max_iou_row.name, axis=0
+                                )
                             )
                         else:
                             self.proposal_GDF.loc[pred_row.name, iou_field] = 0

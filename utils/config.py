@@ -24,7 +24,7 @@ class CustomConfig(Config):
                 " continue the training.".format(num_classes)
             )
 
-        self.NUM_CLASSES = num_classes + 1
+        self.NUM_CLASSES = num_classes + 1  # Background + (Plot)
         super().__init__()
 
     """Configuration for training on the toy shapes dataset.
@@ -55,15 +55,18 @@ class CustomConfig(Config):
     # TRAIN_ROIS_PER_IMAGE = 32
 
     # Use a small epoch since the data is simple
+    # Number of training steps per epoch
     STEPS_PER_EPOCH = 30  # TODO, this needs to be increased to 500 or something when you have high machine capacity
 
     # This is how often validation is run. If you are using too much hard drive space
     # on saved models (in the MODEL_DIR), try making this value larger.
     VALIDATION_STEPS = 15
 
+    # Skip detections with < 90% confidence
     DETECTION_MIN_CONFIDENCE = 0.9
 
 
 # Define ROI Raster
 # roi_image = "tile_4096_4096.tif"
-roi_image = "debi_tiguet_image.tif"
+# roi_image = "debi_tiguet_image.tif"
+roi_image = "mali.tif"

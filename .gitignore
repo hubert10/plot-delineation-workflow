@@ -1,6 +1,10 @@
 # Data files and directories common in repo root
 # Skip these folders
 datasets/
+dataset/
+Dataset/
+Data/
+data/
 logs/
 results/
 QGIS/
@@ -9,6 +13,7 @@ temp/
 test/
 logs/
 train/
+Input/
 val/
 samples/*
 # Skip these files
@@ -93,7 +98,6 @@ env/
 build/
 develop-eggs/
 dist/
-downloads/
 Output/*.jpg
 eggs/
 .eggs/

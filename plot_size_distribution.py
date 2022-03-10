@@ -40,17 +40,22 @@ ECKERT_IV_PROJ4_STRING = (
 )
 original_df = original_df.to_crs(ECKERT_IV_PROJ4_STRING)
 original_df["area"] = original_df["geometry"].area
-original_df.head()
+# original_df.head()
 
 pred_df = pred_df.to_crs(ECKERT_IV_PROJ4_STRING)
 pred_df["area"] = pred_df["geometry"].area
-pred_df.head()
+# pred_df.head()
+pred_df = pred_df[pred_df.area > 50]
+pred_df = pred_df[pred_df.area < 20420]
 
+
+print(original_df.shape)
+print(pred_df.shape)
 # you can round the result to 2 digit by using a lambda function
 # gdf['rounded_area'] = gdf['area'].apply(lambda x: round(x, 2))
 fig, ax = plt.subplots()
-ax.hist(original_df["area"], color="lightblue", label='ground truth plots', alpha=0.5)
-ax.hist(pred_df["area"], color="salmon", label='predicted plots', alpha=0.5)
+ax.hist(original_df["area"], color="lightblue", label="ground truth plots", alpha=0.5)
+ax.hist(pred_df["area"], color="salmon", label="predicted plots", alpha=0.5)
 plt.legend()
 
 ax.set(

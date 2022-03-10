@@ -14,7 +14,7 @@ from utils.config import PROJECT_ROOT
 from utils.config import roi_image
 
 
-#### Convert the PNG predictions to Rasters Tif format
+#### Convert the PNG predictions to Rasters Tif format using the original image
 
 # converts from png to tiff
 
@@ -65,6 +65,7 @@ save_path = PROJECT_ROOT + "results/Test/georeferenced/"
 output_dir = create_dir(save_path + roi_image.split(".")[0])
 save_path = pathlib.Path(output_dir)
 input_img_jpg, georef_img_tif, save_path
+
 
 # Import the images, convert them to tif and save back in defined folder
 

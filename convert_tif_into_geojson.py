@@ -166,21 +166,21 @@ class Polygonized:
     def mask_to_raster(input_path, output_shp):
         """Transforme mask into vector file(Geojson) .
 
-    Arguments
-    ---------
-    input_path : Str
-        Pathto the image .
-    output_path : Str
-        Path to the output produced .
+        Arguments
+        ---------
+        input_path : Str
+            Pathto the image .
+        output_path : Str
+            Path to the output produced .
 
-    Returns
-    -------
-    A vector file of the raster.
+        Returns
+        -------
+        A vector file of the raster.
 
-    Notes
-    -----
-    This functions depends on "gdal" and its subfunctions.
-    """
+        Notes
+        -----
+        This functions depends on "gdal" and its subfunctions.
+        """
         open_image = gdal.Open(input_path)
         input_band = open_image.GetRasterBand(1)
         # create output data source

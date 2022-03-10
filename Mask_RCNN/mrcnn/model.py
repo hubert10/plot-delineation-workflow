@@ -1142,7 +1142,7 @@ def smooth_l1_loss(y_true, y_pred):
     """
     diff = K.abs(y_true - y_pred)
     less_than_one = K.cast(K.less(diff, 1.0), "float32")
-    loss = (less_than_one * 0.5 * diff ** 2) + (1 - less_than_one) * (diff - 0.5)
+    loss = (less_than_one * 0.5 * diff**2) + (1 - less_than_one) * (diff - 0.5)
     return loss
 
 
@@ -2101,6 +2101,55 @@ class MaskRCNN:
         self.keras_model.metrics_tensors = []
         self.keras_model.metrics_tensors = []
         self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
 
     def build(self, mode, config):
         """Build Mask R-CNN architecture.
@@ -2112,7 +2161,7 @@ class MaskRCNN:
 
         # Image size must be dividable by 2 multiple times
         h, w = config.IMAGE_SHAPE[:2]
-        if h / 2 ** 6 != int(h / 2 ** 6) or w / 2 ** 6 != int(w / 2 ** 6):
+        if h / 2**6 != int(h / 2**6) or w / 2**6 != int(w / 2**6):
             raise Exception(
                 "Image size must be dividable by 2 at least 6 times "
                 "to avoid fractions when downscaling and upscaling."

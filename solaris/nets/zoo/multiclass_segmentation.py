@@ -149,14 +149,23 @@ class MultiClass_UNet_VGG11(nn.Module):
         self.conv2 = nn.Sequential(self.encoder[3], self.relu)
 
         self.conv3 = nn.Sequential(
-            self.encoder[6], self.relu, self.encoder[8], self.relu,
+            self.encoder[6],
+            self.relu,
+            self.encoder[8],
+            self.relu,
         )
         self.conv4 = nn.Sequential(
-            self.encoder[11], self.relu, self.encoder[13], self.relu,
+            self.encoder[11],
+            self.relu,
+            self.encoder[13],
+            self.relu,
         )
 
         self.conv5 = nn.Sequential(
-            self.encoder[16], self.relu, self.encoder[18], self.relu,
+            self.encoder[16],
+            self.relu,
+            self.encoder[18],
+            self.relu,
         )
 
         self.center = MultiClass_DecoderBlock(

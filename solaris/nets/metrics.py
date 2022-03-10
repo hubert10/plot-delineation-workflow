@@ -4,8 +4,7 @@ import tensorflow as tf
 
 
 def get_metrics(framework, config):
-    """Load model training metrics from a config file for a specific framework.
-    """
+    """Load model training metrics from a config file for a specific framework."""
     training_metrics = []
     validation_metrics = []
 
