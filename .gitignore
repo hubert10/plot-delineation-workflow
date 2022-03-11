@@ -15,6 +15,7 @@ logs/
 train/
 Input/
 val/
+saved_model/
 notebooks/
 samples/
 samples/*

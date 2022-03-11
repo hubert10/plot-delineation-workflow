@@ -10,7 +10,6 @@ Created on FEB 02/02/2022 at Manobi Africa/ ICRISAT
           Hubert Kanyamahanga - ICRISAT/ Manobi Africa
           Glorie Wowo -  ICRISAT/ Manobi Africa
 """
-import cv2
 import os
 import PIL
 import numpy as np
@@ -29,6 +28,11 @@ tf.cast
 import warnings
 
 warnings.filterwarnings("ignore")
+# https://stackoverflow.com/questions/58070174/overcome-opencv-cv-io-max-image-pixels-limitation-in-python
+os.environ["OPENCV_IO_MAX_IMAGE_PIXELS"] = pow(2,40).__str__()
+import cv2
+
+# export CV_IO_MAX_IMAGE_PIXELS=1099511627776
 
 ##########################################################################################################################
 ##########################################################################################################################
@@ -110,7 +114,6 @@ model.load_weights(PROJECT_ROOT + "saved_model/mask_rcnn_object_0015.h5", by_nam
 img = cv2.imread(PROJECT_ROOT + "samples/roi/" + roi_image)  # BGR
 # img = cv2.imread(PROJECT_ROOT + "samples/roi/debi_tiguet_image.tif")  # BGR
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)  # Opencv reads images as BGR
-
 patch_size = 1024
 
 SIZE_X = (

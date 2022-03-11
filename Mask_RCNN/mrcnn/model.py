@@ -2150,6 +2150,10 @@ class MaskRCNN:
         self.keras_model.metrics_tensors = []
         self.keras_model.metrics_tensors = []
         self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
+        self.keras_model.metrics_tensors = []
 
     def build(self, mode, config):
         """Build Mask R-CNN architecture.
