@@ -166,7 +166,7 @@ predictions_smooth = predict_img_with_smooth_windowing(
     large_img,
     window_size=1024,
     subdivisions=2,  # Minimal amount of overlap for windowing. Must be an even number.
-    nb_classes=1,
+    nb_classes=3,
     pred_func=(func_pred),
 )
 end_time = datetime.now()
